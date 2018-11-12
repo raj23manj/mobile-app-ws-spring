@@ -32,7 +32,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
         .permitAll()
         .anyRequest()
         .authenticated()
-        .and().addFilter(new AuthenticationFilter(authenticationManager()));
+        .and()
+        // the reason why we do this because AuthenticationFilter does not have any annotation @component etc, hence can't autowire
+        .addFilter(new AuthenticationFilter(authenticationManager()));
         
     }
 
@@ -46,3 +48,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
     }
 }
+
+/*
+ * spring gives a default /login url to login
+ * */

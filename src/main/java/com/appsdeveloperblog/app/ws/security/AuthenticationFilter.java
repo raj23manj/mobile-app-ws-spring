@@ -16,6 +16,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.appsdeveloperblog.app.ws.SpringApplicationContext;
+import com.appsdeveloperblog.app.ws.service.UserService;
+import com.appsdeveloperblog.app.ws.shared.dto.UserDto;
 import com.appsdeveloperblog.app.ws.ui.model.request.UserLoginRequestModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -24,6 +27,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 //#2
 // this class is used to filter username amd password
+
+// this authentication filter cannot autowire or inject other beans, hence need to get the spring context here, see below successfulAuthentication
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter  {
 private final AuthenticationManager authenticationManager;
     
@@ -75,13 +80,17 @@ private final AuthenticationManager authenticationManager;
         String userName = ((User) auth.getPrincipal()).getUsername();  
         
         String token = Jwts.builder()
-                .setSubject(userName)
-                .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
-                .signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET )
-                .compact();
+			               .setSubject(userName)
+			               .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
+			               .signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET )
+			               .compact();
+     // this authentication filter cannot auto wire or inject other beans, hence need to get the spring context here, see below successfulAuthentication
+        UserService userService = (UserService)SpringApplicationContext.getBean("userServiceImpl");
+        UserDto userDto = userService.getUser(userName);
        
        // this is the token returned to the client angular, mobile. It needs to store this token and send it back for authorization 
         res.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
+        res.addHeader("UserID", userDto.getUserId());
         
     }  
 }
