@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.appsdeveloperblog.app.ws.service.UserService;
-
+//#1
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter{
 	// this is an interface given to us by spring security
