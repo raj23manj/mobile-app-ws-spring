@@ -82,7 +82,7 @@ private final AuthenticationManager authenticationManager;
         String token = Jwts.builder()
 			               .setSubject(userName)
 			               .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
-			               .signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET )
+			               .signWith(SignatureAlgorithm.HS512, SecurityConstants.getTokenSecret() )
 			               .compact();
      // this authentication filter cannot auto wire or inject other beans, hence need to get the spring context here, see below successfulAuthentication
         UserService userService = (UserService)SpringApplicationContext.getBean("userServiceImpl");
