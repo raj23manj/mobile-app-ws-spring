@@ -33,8 +33,10 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
         .anyRequest()
         .authenticated()
         .and()
+        // adding custom user login
+        .addFilter(getAuthenticationFilter());
         // the reason why we do this because AuthenticationFilter does not have any annotation @component etc, hence can't autowire
-        .addFilter(new AuthenticationFilter(authenticationManager()));
+        //.addFilter(new AuthenticationFilter(authenticationManager()));
         
     }
 
@@ -47,6 +49,14 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
     	// which also comes from spring
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
     }
+    
+    
+    //
+    protected AuthenticationFilter getAuthenticationFilter() throws Exception {
+	    final AuthenticationFilter filter = new AuthenticationFilter(authenticationManager());
+	    filter.setFilterProcessesUrl("/users/login");
+	    return filter;
+	}
 }
 
 /*
