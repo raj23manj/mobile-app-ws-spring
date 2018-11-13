@@ -14,7 +14,7 @@ import com.appsdeveloperblog.app.ws.ui.model.response.ErrorMessage;
 @ControllerAdvice
 public class AppExceptionsHandler {
 	// this annotation say what type of exception this method needs to handle 
-	@ExceptionHandler(value = {UserServiceException.class})
+	@ExceptionHandler(value = {UserServiceException.class}) // if multiple classes are added add Exception in arguments for generic
 	public ResponseEntity<Object> handleUserServiceException(UserServiceException ex, WebRequest request) {
 		// sending custom error message
 		ErrorMessage errorMessage = new ErrorMessage(new Date(), ex.getMessage());
