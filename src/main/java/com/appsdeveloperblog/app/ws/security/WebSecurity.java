@@ -5,6 +5,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 //import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -34,9 +35,13 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
         .authenticated()
         .and()
         // adding custom user login
-        .addFilter(getAuthenticationFilter());
+        .addFilter(getAuthenticationFilter())
+        .addFilter(new AuthorizationFilter(authenticationManager()))
         // the reason why we do this because AuthenticationFilter does not have any annotation @component etc, hence can't autowire
         //.addFilter(new AuthenticationFilter(authenticationManager()));
+        // should make rest api stateless, because it creates session and cashes, and does not require JWT to authorize again, I came across this issue
+        .sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS); // there are other options 
         
     }
 
@@ -51,7 +56,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
     }
     
     
-    //
+    // override user login page uri
     protected AuthenticationFilter getAuthenticationFilter() throws Exception {
 	    final AuthenticationFilter filter = new AuthenticationFilter(authenticationManager());
 	    filter.setFilterProcessesUrl("/users/login");
