@@ -1,6 +1,8 @@
 package com.appsdeveloperblog.app.ws.ui.controller;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -29,6 +31,13 @@ import com.appsdeveloperblog.app.ws.ui.model.response.ErrorMessages;
 import com.appsdeveloperblog.app.ws.ui.model.response.OperationStatusModel;
 import com.appsdeveloperblog.app.ws.ui.model.response.RequestOperationStatus;
 import com.appsdeveloperblog.app.ws.ui.model.response.UserRest;
+
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
+import org.springframework.hateoas.Link;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
 
 @RestController
 @RequestMapping("/users")
@@ -121,31 +130,49 @@ public class UserController {
 	}
 	
 	// http://localhost:8080/mobile-app-ws/users/jfhdjeufhdhdj/addressses
-	@GetMapping(path = {"/{id}/addresses"}, produces = { MediaType.APPLICATION_XML_VALUE,
-													   MediaType.APPLICATION_JSON_VALUE })
-	public List<AddressesRest> getUserAddresses(@PathVariable String id) {
-		List<AddressesRest> returnValue = new ArrayList<>();
+		@GetMapping(path = "/{id}/addresses", produces = { MediaType.APPLICATION_XML_VALUE,
+				MediaType.APPLICATION_JSON_VALUE, "application/hal+json" })
+		public Resources<AddressesRest> getUserAddresses(@PathVariable String id) {
+			List<AddressesRest> addressesListRestModel = new ArrayList<>();
 
-		List<AddressDTO> addressesDTO = addressesService.getAddresses(id);
-		
-		if (addressesDTO != null && !addressesDTO.isEmpty()) {
-			// see model mapper how to array of type object to other array
-			java.lang.reflect.Type listType = new TypeToken<List<AddressesRest>>() { }.getType();
-			returnValue = new ModelMapper().map(addressesDTO, listType);
+			List<AddressDTO> addressesDTO = addressesService.getAddresses(id);
+
+			if (addressesDTO != null && !addressesDTO.isEmpty()) {
+				// see model mapper how to array of type object to other array
+				Type listType = new TypeToken<List<AddressesRest>>() { }.getType();
+				addressesListRestModel = new ModelMapper().map(addressesDTO, listType);
+
+				for (AddressesRest addressRest : addressesListRestModel) {
+					Link addressLink = linkTo(methodOn(UserController.class).getUserAddress(id, addressRest.getAddressId()))
+							.withSelfRel();
+					addressRest.add(addressLink);
+
+					Link userLink = linkTo(methodOn(UserController.class).getUser(id)).withRel("user");
+					addressRest.add(userLink);
+				}
+			}
+
+			return new Resources<>(addressesListRestModel);
 		}
-		
-		return returnValue;
-	}
 	
-	@GetMapping(path = "/{userId}/addresses/{addressId}", 
-				produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, "application/hal+json" })
-	public AddressesRest getUserAddress(@PathVariable String addressId) {
+	@GetMapping(path = "/{userId}/addresses/{addressId}", produces = { MediaType.APPLICATION_JSON_VALUE,
+			MediaType.APPLICATION_XML_VALUE, "application/hal+json" })
+	public Resource<AddressesRest> getUserAddress(@PathVariable String userId, @PathVariable String addressId) {
 
 		AddressDTO addressesDto = addressesService.getAddress(addressId);
 
 		ModelMapper modelMapper = new ModelMapper();
-		
-		return modelMapper.map(addressesDto, AddressesRest.class);
+		Link addressLink = linkTo(methodOn(UserController.class).getUserAddress(userId, addressId)).withSelfRel();
+		Link userLink = linkTo(UserController.class).slash(userId).withRel("user");
+		Link addressesLink = linkTo(methodOn(UserController.class).getUserAddresses(userId)).withRel("addresses");
+
+		AddressesRest addressesRestModel = modelMapper.map(addressesDto, AddressesRest.class);
+
+		addressesRestModel.add(addressLink);
+		addressesRestModel.add(userLink);
+		addressesRestModel.add(addressesLink);
+
+		return new Resource<>(addressesRestModel);
 	}
 	
 	
