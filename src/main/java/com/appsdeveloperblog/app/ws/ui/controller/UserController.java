@@ -130,31 +130,31 @@ public class UserController {
 	}
 	
 	// http://localhost:8080/mobile-app-ws/users/jfhdjeufhdhdj/addressses
-		@GetMapping(path = "/{id}/addresses", produces = { MediaType.APPLICATION_XML_VALUE,
-				MediaType.APPLICATION_JSON_VALUE, "application/hal+json" })
-		public Resources<AddressesRest> getUserAddresses(@PathVariable String id) {
-			List<AddressesRest> addressesListRestModel = new ArrayList<>();
+	@GetMapping(path = "/{id}/addresses", produces = { MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_VALUE, "application/hal+json" })
+	public Resources<AddressesRest> getUserAddresses(@PathVariable String id) {
+		List<AddressesRest> addressesListRestModel = new ArrayList<>();
 
-			List<AddressDTO> addressesDTO = addressesService.getAddresses(id);
+		List<AddressDTO> addressesDTO = addressesService.getAddresses(id);
 
-			if (addressesDTO != null && !addressesDTO.isEmpty()) {
-				// see model mapper how to array of type object to other array
-				Type listType = new TypeToken<List<AddressesRest>>() { }.getType();
-				addressesListRestModel = new ModelMapper().map(addressesDTO, listType);
+		if (addressesDTO != null && !addressesDTO.isEmpty()) {
+			// see model mapper how to array of type object to other array
+			Type listType = new TypeToken<List<AddressesRest>>() { }.getType();
+			addressesListRestModel = new ModelMapper().map(addressesDTO, listType);
 
-				for (AddressesRest addressRest : addressesListRestModel) {
-					Link addressLink = linkTo(methodOn(UserController.class).getUserAddress(id, addressRest.getAddressId()))
-							.withSelfRel();
-					addressRest.add(addressLink);
+			for (AddressesRest addressRest : addressesListRestModel) {
+				Link addressLink = linkTo(methodOn(UserController.class).getUserAddress(id, addressRest.getAddressId()))
+						.withSelfRel();
+				addressRest.add(addressLink);
 
-					Link userLink = linkTo(methodOn(UserController.class).getUser(id)).withRel("user");
-					addressRest.add(userLink);
-				}
+				Link userLink = linkTo(methodOn(UserController.class).getUser(id)).withRel("user");
+				addressRest.add(userLink);
 			}
-
-			return new Resources<>(addressesListRestModel);
 		}
-	
+
+		return new Resources<>(addressesListRestModel);
+	}
+
 	@GetMapping(path = "/{userId}/addresses/{addressId}", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE, "application/hal+json" })
 	public Resource<AddressesRest> getUserAddress(@PathVariable String userId, @PathVariable String addressId) {
@@ -176,5 +176,26 @@ public class UserController {
 	}
 	
 	
+	/*
+     * http://localhost:8080/mobile-app-ws/users/email-verification?token=sdfsdf
+     * */
+    @GetMapping(path = "/email-verification", 
+    			produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    public OperationStatusModel verifyEmailToken(@RequestParam(value = "token") String token) {
+
+        OperationStatusModel returnValue = new OperationStatusModel();
+        returnValue.setOperationName(RequestOperationName.VERIFY_EMAIL.name());
+        
+        boolean isVerified = userService.verifyEmailToken(token);
+        
+        if(isVerified)
+        {
+            returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
+        } else {
+            returnValue.setOperationResult(RequestOperationStatus.ERROR.name());
+        }
+
+        return returnValue;
+    }
 	
 }
