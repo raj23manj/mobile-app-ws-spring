@@ -10,6 +10,7 @@ import com.appsdeveloperblog.app.ws.security.SecurityConstants;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.Claims;
 
 @Component
@@ -54,4 +55,13 @@ public class Utils {
 
 		return returnValue;
 	}
+    
+    public String generateEmailVerificationToken(String userId) {
+        String token = Jwts.builder()
+                .setSubject(userId)
+                .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
+                .signWith(SignatureAlgorithm.HS512, SecurityConstants.getTokenSecret())
+                .compact();
+        return token;
+    }
 }

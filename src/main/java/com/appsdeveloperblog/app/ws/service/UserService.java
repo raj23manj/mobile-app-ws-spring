@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.appsdeveloperblog.app.ws.shared.dto.UserDto;
 
+// extending from spring user details service to override all the methods
 public interface UserService extends UserDetailsService {
 	UserDto createUser(UserDto user); 
 	UserDto getUser(String email);

@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
 		String publicUserId = utils.generateUserId(30);
 		userEntity.setUserId(publicUserId);
 		userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-		
+		userEntity.setEmailVerificationToken(utils.generateEmailVerificationToken(publicUserId));
 		
 		
 		UserEntity storedUserDetails = userRepository.save(userEntity);
@@ -83,7 +83,14 @@ public class UserServiceImpl implements UserService {
 		if(userEntity == null) throw new UsernameNotFoundException(email);
 		
 		// this user here comes from spring security
-		return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
+		//return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
+		
+		// enabling email token verification, this user if from spring 
+		return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), 
+						userEntity.getEmailVerificationStatus(),
+						true, true,
+						true, new ArrayList<>());
+
 	}
 	
 	@Override
