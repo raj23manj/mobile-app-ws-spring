@@ -50,7 +50,8 @@ public class UserServiceImpl implements UserService {
 	public UserDto createUser(UserDto user) {
 		UserEntity existingUser = userRepository.findByEmail(user.getEmail());
 		
-		if(existingUser != null) throw new RuntimeException("Record Already Exists");
+//		if(existingUser != null) throw new RuntimeException("Record Already Exists");
+		if(existingUser != null) throw new UserServiceException("Record Already Exists");
 		
 		// generate userId's 
 		
