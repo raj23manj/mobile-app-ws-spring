@@ -63,7 +63,6 @@ class UserServiceImplTest {
 	@BeforeEach
 	void setUp() throws Exception {
 		// we can do userServiceImpl = new UserServiceImple(), but there are DI present in it hence letting the frame work do it
-		
 		MockitoAnnotations.initMocks(this);
 		
 		userEntity = new UserEntity();

@@ -97,7 +97,7 @@
 			<scope>test</scope>
 		</dependency>
 		
-		<!-- For Testing -->
+		<!-- For Testing, to run from command line -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
