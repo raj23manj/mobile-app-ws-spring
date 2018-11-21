@@ -129,6 +129,8 @@ class UserServiceImplTest {
 		when(utils.generateUserId(anyInt())).thenReturn(userId);
 		when(bCryptPasswordEncoder.encode(anyString())).thenReturn(encryptedPassword);
 		when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
+		
+		// do nothing in mock, to avoid actual scenario here
 		Mockito.doNothing().when(amazonSES).verifyEmail(any(UserDto.class));
  		
 		UserDto userDto = new UserDto();
