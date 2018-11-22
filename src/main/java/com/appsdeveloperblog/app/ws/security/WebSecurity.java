@@ -37,6 +37,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
         .permitAll()
         .antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_URL)
         .permitAll()
+        .antMatchers(SecurityConstants.H2_CONSOLE)// making h2console also public
+        .permitAll()
         .anyRequest()
         .authenticated()
         .and()
@@ -48,6 +50,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
         // should make rest api stateless, because it creates session and cashes, and does not require JWT to authorize again, I came across this issue
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS); // there are other options 
+        
+        // to disable browser from loading iframe tags, in use of h2 only
+        http.headers().frameOptions().disable();
         
     }
 
