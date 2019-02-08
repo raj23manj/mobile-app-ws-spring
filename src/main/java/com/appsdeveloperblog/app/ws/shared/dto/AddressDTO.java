@@ -1,5 +1,10 @@
 package com.appsdeveloperblog.app.ws.shared.dto;
 
+import com.appsdeveloperblog.app.ws.io.entity.CustomAddressSerializer;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+//@JsonSerialize(using = CustomAddressSerializer.class)
 public class AddressDTO {
 	private long id;
 	private String addressId;
@@ -8,6 +13,7 @@ public class AddressDTO {
 	private String streetName;
 	private String postalCode;
 	private String type;
+	@JsonIgnore
 	private UserDto userDetails;
 
 	public long getId() {

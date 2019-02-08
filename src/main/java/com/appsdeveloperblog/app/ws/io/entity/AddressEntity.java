@@ -9,7 +9,15 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity(name="addresses")
+@JsonIdentityInfo(
+		  generator = ObjectIdGenerators.PropertyGenerator.class, 
+		  property = "id")
 public class AddressEntity implements Serializable {
 
 	private static final long serialVersionUID = 7809200551672852690L;
@@ -36,8 +44,11 @@ public class AddressEntity implements Serializable {
 	@Column(length=10, nullable=false)
 	private String type;
 	
+	@JsonManagedReference
 	@ManyToOne
 	@JoinColumn(name="users_id")
+	//@JsonIgnore
+	@JsonIgnoreProperties("userDetails")
 	private UserEntity userDetails;
 
 	public long getId() {

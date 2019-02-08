@@ -29,6 +29,10 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
     	// anyRequest() -> means any other request will be needed to be authenticated
     	// we will not be able to access others get /users, delete /users etc ....
         http.csrf().disable().authorizeRequests()
+        .antMatchers(HttpMethod.GET, "/users/custom_users")
+        .permitAll()
+        .antMatchers(HttpMethod.GET, "/users")
+        .permitAll()
         .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL)
         .permitAll()
         .antMatchers(HttpMethod.GET, SecurityConstants.VERIFICATION_EMAIL_URL)

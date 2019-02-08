@@ -112,7 +112,7 @@ public class UserController {
 		return returnValue;
 	}
 	
-	@GetMapping(produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
 	public List<UserRest> getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
 								   @RequestParam(value = "limit", defaultValue = "2") int limit) {
 		List<UserRest> returnValue = new ArrayList<>();
@@ -247,5 +247,24 @@ public class UserController {
         return returnValue;
     }
 
+    
+    @GetMapping(path = "/custom_users",produces = { MediaType.APPLICATION_JSON_VALUE })
+	public List<UserRest> getCustomUsers(@RequestParam(value = "page", defaultValue = "0") int page,
+								   @RequestParam(value = "limit", defaultValue = "2") int limit) {
+		List<UserRest> returnValue = new ArrayList<>();
+
+		List<UserDto> users = userService.getUsers(page, limit);
+		
+		//Type listType = new TypeToken<List<UserRest>>() {}.getType();
+		//returnValue = new ModelMapper().map(users, listType);
+
+		for (UserDto userDto : users) {
+			UserRest userModel = new UserRest();
+			BeanUtils.copyProperties(userDto, userModel);
+			returnValue.add(userModel);
+		}
+
+		return returnValue;
+	}
 	
 }

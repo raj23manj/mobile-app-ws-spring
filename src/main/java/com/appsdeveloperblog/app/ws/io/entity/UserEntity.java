@@ -10,7 +10,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity(name = "users")
+@JsonIdentityInfo(
+		  generator = ObjectIdGenerators.PropertyGenerator.class, 
+		  property = "id")
 public class UserEntity implements Serializable {
 
 	private static final long serialVersionUID = 5313493413859894403L;
@@ -41,7 +49,9 @@ public class UserEntity implements Serializable {
 	@Column(nullable = false)
 	private Boolean emailVerificationStatus = false;
 	
+	@JsonBackReference
 	@OneToMany(mappedBy="userDetails", cascade=CascadeType.ALL)
+	@JsonIgnoreProperties("userDetails")
 	private List<AddressEntity> addresses;
 
 	public long getId() {
