@@ -3,18 +3,42 @@ package com.appsdeveloperblog.app.ws.shared.dto;
 import java.io.Serializable;
 import java.util.List;
 
+import com.appsdeveloperblog.app.ws.views.View;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+
 public class UserDto implements Serializable {
 	
 	private static final long serialVersionUID = 6835192601898364280L;
+	
+	@JsonView(View.DetailView.class)
 	private long id;
+	
+	@JsonView({View.OveralView.class}) // @JsonView({View.OveralView.class, View.ProductView.class})
 	private String userId;
+	
+	@JsonView(View.DetailView.class)
 	private String firstName;
+	
+	@JsonView(View.DetailView.class)
 	private String lastName;
+	
+	@JsonView(View.DetailView.class)
 	private String email;
+	
+	@JsonIgnore
 	private String password;
+	
+	@JsonIgnore
 	private String encryptedPassword;
+	
+	@JsonIgnore
 	private String emailVerificationToken;
+	
+	@JsonIgnore
 	private Boolean emailVerificationStatus = false;
+	
+	@JsonView(View.DetailView.class)
 	private List<AddressDTO> addresses;
 
 	public long getId() {

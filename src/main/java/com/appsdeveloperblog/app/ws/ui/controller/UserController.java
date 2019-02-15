@@ -38,6 +38,8 @@ import com.appsdeveloperblog.app.ws.ui.model.response.ErrorMessages;
 import com.appsdeveloperblog.app.ws.ui.model.response.OperationStatusModel;
 import com.appsdeveloperblog.app.ws.ui.model.response.RequestOperationStatus;
 import com.appsdeveloperblog.app.ws.ui.model.response.UserRest;
+import com.appsdeveloperblog.app.ws.utils.JsonViewSerializeUtils;
+import com.appsdeveloperblog.app.ws.views.View;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -150,6 +152,26 @@ public class UserController {
 		
 		return arrayToJson;
 	}
+	
+	// https://grokonez.com/json/use-jsonview-serializede-serialize-customize-json-format-java-object
+		@GetMapping(path = "/objectsListMapper", 
+				    produces = { MediaType.APPLICATION_JSON_VALUE }) // MediaType.APPLICATION_XML_VALUE,
+		public String getUsersAsListMapper(@RequestParam(value = "page", defaultValue = "0") int page,
+									   @RequestParam(value = "limit", defaultValue = "2") int limit) throws JsonProcessingException {
+			
+			ObjectMapper objectMapper = new ObjectMapper();
+	    	//Set pretty printing of json
+	    	objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+			List<UserDto> users = userService.getUsers(page, limit);
+			
+		
+			
+//			String overalViewString = JsonViewSerializeUtils.serializeObjectToString(users, View.OveralView.class);
+			String overalViewString = JsonViewSerializeUtils.serializeObjectToString(users, View.DetailView.class);
+			
+			return overalViewString;
+		}
 	
 	
 	// http://localhost:8080/mobile-app-ws/users/jfhdjeufhdhdj/addressses

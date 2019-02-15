@@ -9,13 +9,16 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.appsdeveloperblog.app.ws.views.View;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity(name="addresses")
 public class AddressEntity implements Serializable {
 
 	private static final long serialVersionUID = 7809200551672852690L;
 	
+	@JsonView(View.DetailView.class)
 	@Id
 	@GeneratedValue
 	private long id;
@@ -23,15 +26,23 @@ public class AddressEntity implements Serializable {
 	@Column(length=30, nullable=false)
 	private String addressId;
 	
+	
+	@JsonView(View.DetailView.class)
 	@Column(length=15, nullable=false)
 	private String city;
 	
+	
+	@JsonView(View.DetailView.class)
 	@Column(length=15, nullable=false)
 	private String country;
 	
+	
+	@JsonView(View.DetailView.class)
 	@Column(length=100, nullable=false)
 	private String streetName;
 	
+	
+	@JsonView(View.DetailView.class)
 	@Column(length=7, nullable=false)
 	private String postalCode;
 	
