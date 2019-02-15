@@ -40,6 +40,7 @@ import com.appsdeveloperblog.app.ws.ui.model.response.RequestOperationStatus;
 import com.appsdeveloperblog.app.ws.ui.model.response.UserRest;
 import com.appsdeveloperblog.app.ws.utils.JsonViewSerializeUtils;
 import com.appsdeveloperblog.app.ws.views.View;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -192,6 +193,30 @@ public class UserController {
 					String overalViewString = JsonViewSerializeUtils.serializeObjectToString(addresses, View.DetailView.class);
 					
 					return overalViewString;
+				}
+				
+				// https://grokonez.com/json/use-jsonview-serializede-serialize-customize-json-format-java-object
+				@JsonView(View.OveralView.class)
+				@GetMapping(path = "/objectsListMapperAddressController", 
+						    produces = { MediaType.APPLICATION_JSON_VALUE }) // MediaType.APPLICATION_XML_VALUE,
+				public List<AddressDTO> getAddressAsListMapperController(@RequestParam(value = "page", defaultValue = "0") int page,
+											   @RequestParam(value = "limit", defaultValue = "2") int limit) throws JsonProcessingException {
+					
+					ObjectMapper objectMapper = new ObjectMapper();
+			    	//Set pretty printing of json
+			    	objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+					List<AddressDTO> addresses = addressesService.getAllAddresses();
+					
+				
+					
+//							String overalViewString = JsonViewSerializeUtils.serializeObjectToString(users, View.OveralView.class);
+					// this maps to DTO view
+//							String overalViewString = JsonViewSerializeUtils.serializeObjectToString(addresses, View.DetailView.class);
+//							
+//							return overalViewString;
+					
+					return addresses;		
 				}
 	
 	

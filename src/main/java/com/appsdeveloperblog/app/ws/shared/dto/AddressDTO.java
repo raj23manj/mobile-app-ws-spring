@@ -20,10 +20,10 @@ public class AddressDTO {
 	@JsonIgnore
 	private String streetName;
 	
-	@JsonView(View.DetailView.class)
+	@JsonView(View.OveralView.class)
 	private String postalCode;
 	
-	@JsonView(View.DetailView.class)
+	@JsonView(View.OveralView.class)
 	private String type;
 	
 	@JsonView(View.DetailView.class)

@@ -33,7 +33,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
         .permitAll()
         .antMatchers(HttpMethod.GET, "/users")
         .permitAll()
-        .antMatchers("/users/objectMapper", "/users/objectsListMapper", "/users/objectsListMapperAddress").permitAll()
+        .antMatchers("/users/objectMapper", "/users/objectsListMapper", "/users/objectsListMapperAddress", "/users/objectsListMapperAddressController").permitAll()
         .antMatchers(HttpMethod.GET, SecurityConstants.VERIFICATION_EMAIL_URL)
         .permitAll()
         .antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_REQUEST_URL)
