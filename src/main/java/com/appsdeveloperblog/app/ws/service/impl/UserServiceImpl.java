@@ -115,6 +115,7 @@ public class UserServiceImpl implements UserService {
 
 		UserDto returnValue = new UserDto();
 		BeanUtils.copyProperties(userEntity, returnValue);
+		//new ModelMapper().map(users, listType);
  
 		return returnValue;
 	}

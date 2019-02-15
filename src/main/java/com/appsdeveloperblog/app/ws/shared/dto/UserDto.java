@@ -26,16 +26,20 @@ public class UserDto implements Serializable {
 	@JsonView(View.DetailView.class)
 	private String email;
 	
-	@JsonIgnore
+//	@JsonIgnore
+	@JsonView(View.DetailView.class)
 	private String password;
 	
-	@JsonIgnore
+	@JsonView(View.DetailView.class)
+//	@JsonIgnore
 	private String encryptedPassword;
 	
-	@JsonIgnore
+	
+	@JsonView(View.DetailView.class)
+	@JsonIgnore // 
 	private String emailVerificationToken;
 	
-	@JsonIgnore
+	@JsonIgnore // no use, without using view, by default it gets ignored
 	private Boolean emailVerificationStatus = false;
 	
 	@JsonView(View.DetailView.class)
