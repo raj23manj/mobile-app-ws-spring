@@ -1,14 +1,19 @@
 package com.appsdeveloperblog.app.ws.ui.controller;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,12 +38,9 @@ import com.appsdeveloperblog.app.ws.ui.model.response.ErrorMessages;
 import com.appsdeveloperblog.app.ws.ui.model.response.OperationStatusModel;
 import com.appsdeveloperblog.app.ws.ui.model.response.RequestOperationStatus;
 import com.appsdeveloperblog.app.ws.ui.model.response.UserRest;
-
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.Resources;
-import org.springframework.hateoas.Link;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 
 @RestController
@@ -130,6 +132,25 @@ public class UserController {
 
 		return returnValue;
 	}
+	
+	
+	// http://www.makeinjava.com/convert-list-objects-tofrom-json-java-jackson-objectmapper-example/
+	@GetMapping(path = "/objectMapper", 
+			    produces = { MediaType.APPLICATION_JSON_VALUE }) // MediaType.APPLICATION_XML_VALUE,
+	public String getUsersAsMapper(@RequestParam(value = "page", defaultValue = "0") int page,
+								   @RequestParam(value = "limit", defaultValue = "2") int limit) throws JsonProcessingException {
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+    	//Set pretty printing of json
+    	objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+		List<UserDto> users = userService.getUsers(page, limit);
+		
+		String arrayToJson = objectMapper.writeValueAsString(users);
+		
+		return arrayToJson;
+	}
+	
 	
 	// http://localhost:8080/mobile-app-ws/users/jfhdjeufhdhdj/addressses
 	@GetMapping(path = "/{id}/addresses", produces = { MediaType.APPLICATION_XML_VALUE,
