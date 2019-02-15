@@ -17,6 +17,7 @@ public class AddressDTO {
 	private String country;
 	
 	@JsonView(View.DetailView.class)
+	@JsonIgnore
 	private String streetName;
 	
 	@JsonView(View.DetailView.class)
@@ -26,7 +27,7 @@ public class AddressDTO {
 	private String type;
 	
 	@JsonView(View.DetailView.class)
-	@JsonIgnore 
+	@JsonIgnore  // if this is commented then there is a issue
 	private UserDto userDetails;
 
 	public long getId() {

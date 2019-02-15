@@ -172,6 +172,27 @@ public class UserController {
 			
 			return overalViewString;
 		}
+		
+		// https://grokonez.com/json/use-jsonview-serializede-serialize-customize-json-format-java-object
+				@GetMapping(path = "/objectsListMapperAddress", 
+						    produces = { MediaType.APPLICATION_JSON_VALUE }) // MediaType.APPLICATION_XML_VALUE,
+				public String getAddressAsListMapper(@RequestParam(value = "page", defaultValue = "0") int page,
+											   @RequestParam(value = "limit", defaultValue = "2") int limit) throws JsonProcessingException {
+					
+					ObjectMapper objectMapper = new ObjectMapper();
+			    	//Set pretty printing of json
+			    	objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+					List<AddressDTO> addresses = addressesService.getAllAddresses();
+					
+				
+					
+//					String overalViewString = JsonViewSerializeUtils.serializeObjectToString(users, View.OveralView.class);
+					// this maps to DTO view
+					String overalViewString = JsonViewSerializeUtils.serializeObjectToString(addresses, View.DetailView.class);
+					
+					return overalViewString;
+				}
 	
 	
 	// http://localhost:8080/mobile-app-ws/users/jfhdjeufhdhdj/addressses

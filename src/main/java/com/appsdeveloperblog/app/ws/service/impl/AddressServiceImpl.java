@@ -54,4 +54,20 @@ public class AddressServiceImpl implements AddressService {
         return returnValue;
 	}
 
+	@Override
+	public List<AddressDTO> getAllAddresses() {
+		List<AddressDTO> returnValue = new ArrayList<>();
+		ModelMapper modelMapper = new ModelMapper();  
+		
+		Iterable<AddressEntity> addresses = addressRepository.findAll();
+        for(AddressEntity addressEntity:addresses)
+        {
+            returnValue.add( modelMapper.map(addressEntity, AddressDTO.class) );
+        }
+		
+		return returnValue;
+	}
+	
+	
+
 }

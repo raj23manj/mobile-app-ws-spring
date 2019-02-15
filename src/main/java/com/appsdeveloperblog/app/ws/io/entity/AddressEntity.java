@@ -38,12 +38,14 @@ public class AddressEntity implements Serializable {
 	@Column(length=100, nullable=false)
 	private String streetName;
 	
+	@JsonView(View.DetailView.class)
 	@Column(length=7, nullable=false)
 	private String postalCode;
 	
 	@Column(length=10, nullable=false)
 	private String type;
 	
+	//@JsonView(View.DetailView.class)
 	@JsonManagedReference
 	@ManyToOne
 	@JoinColumn(name="users_id")
