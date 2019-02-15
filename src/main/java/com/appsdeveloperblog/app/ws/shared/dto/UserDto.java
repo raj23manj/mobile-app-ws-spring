@@ -42,7 +42,7 @@ public class UserDto implements Serializable {
 	@JsonIgnore // no use, without using view, by default it gets ignored
 	private Boolean emailVerificationStatus = false;
 	
-	@JsonView(View.DetailView.class)
+	@JsonView({View.DetailView.class, View.OveralView.class})
 	private List<AddressDTO> addresses;
 
 	public long getId() {

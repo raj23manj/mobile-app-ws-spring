@@ -42,6 +42,7 @@ public class AddressEntity implements Serializable {
 	@Column(length=7, nullable=false)
 	private String postalCode;
 	
+	@JsonView(View.OveralView.class)
 	@Column(length=10, nullable=false)
 	private String type;
 	
