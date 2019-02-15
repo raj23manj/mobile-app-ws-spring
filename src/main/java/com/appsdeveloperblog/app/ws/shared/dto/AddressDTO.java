@@ -1,13 +1,32 @@
 package com.appsdeveloperblog.app.ws.shared.dto;
 
+import com.appsdeveloperblog.app.ws.views.View;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+
 public class AddressDTO {
+	@JsonView(View.DetailView.class)
 	private long id;
+	
 	private String addressId;
+	
+	@JsonView(View.DetailView.class)
 	private String city;
+	
+	@JsonView(View.DetailView.class)
 	private String country;
+	
+	@JsonView(View.DetailView.class)
 	private String streetName;
+	
+	@JsonView(View.DetailView.class)
 	private String postalCode;
+	
+	@JsonView(View.DetailView.class)
 	private String type;
+	
+	@JsonView(View.DetailView.class)
+	@JsonIgnore 
 	private UserDto userDetails;
 
 	public long getId() {

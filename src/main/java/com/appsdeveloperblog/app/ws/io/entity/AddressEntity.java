@@ -25,8 +25,7 @@ public class AddressEntity implements Serializable {
 	
 	@Column(length=30, nullable=false)
 	private String addressId;
-	
-	
+		
 	@JsonView(View.DetailView.class)
 	@Column(length=15, nullable=false)
 	private String city;
@@ -36,13 +35,9 @@ public class AddressEntity implements Serializable {
 	@Column(length=15, nullable=false)
 	private String country;
 	
-	
-	@JsonView(View.DetailView.class)
 	@Column(length=100, nullable=false)
 	private String streetName;
 	
-	
-	@JsonView(View.DetailView.class)
 	@Column(length=7, nullable=false)
 	private String postalCode;
 	
