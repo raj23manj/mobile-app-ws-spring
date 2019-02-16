@@ -9,6 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity(name="addresses")
 public class AddressEntity implements Serializable {
 
@@ -36,6 +39,9 @@ public class AddressEntity implements Serializable {
 	@Column(length=10, nullable=false)
 	private String type;
 	
+	// https://www.baeldung.com/jackson-field-serializable-deserializable-or-not
+	@JsonIgnore
+	@JsonManagedReference
 	@ManyToOne
 	@JoinColumn(name="users_id")
 	private UserEntity userDetails;
@@ -79,29 +85,29 @@ public class AddressEntity implements Serializable {
 	public void setStreetName(String streetName) {
 		this.streetName = streetName;
 	}
+//
+//	public String getPostalCode() {
+//		return postalCode;
+//	}
+//
+//	public void setPostalCode(String postalCode) {
+//		this.postalCode = postalCode;
+//	}
 
-	public String getPostalCode() {
-		return postalCode;
-	}
-
-	public void setPostalCode(String postalCode) {
-		this.postalCode = postalCode;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public UserEntity getUserDetails() {
-		return userDetails;
-	}
-
-	public void setUserDetails(UserEntity userDetails) {
-		this.userDetails = userDetails;
-	}
+//	public String getType() {
+//		return type;
+//	}
+//
+//	public void setType(String type) {
+//		this.type = type;
+//	}
+//
+//	public UserEntity getUserDetails() {
+//		return userDetails;
+//	}
+//
+//	public void setUserDetails(UserEntity userDetails) {
+//		this.userDetails = userDetails;
+//	}
 
 }
