@@ -9,9 +9,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.appsdeveloperblog.app.ws.serializers.AddressEntitySerializer;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+
+@JsonSerialize(using = AddressEntitySerializer.class)
 @Entity(name="addresses")
 public class AddressEntity implements Serializable {
 
@@ -40,7 +43,7 @@ public class AddressEntity implements Serializable {
 	private String type;
 	
 	
-	@JsonIgnore
+//	@JsonIgnore
 	@JsonManagedReference
 	@ManyToOne
 	@JoinColumn(name="users_id")
@@ -102,12 +105,12 @@ public class AddressEntity implements Serializable {
 		this.type = type;
 	}
 
-//	public UserEntity getUserDetails() {
-//		return userDetails;
-//	}
-//
-//	public void setUserDetails(UserEntity userDetails) {
-//		this.userDetails = userDetails;
-//	}
+	public UserEntity getUserDetails() {
+		return userDetails;
+	}
+
+	public void setUserDetails(UserEntity userDetails) {
+		this.userDetails = userDetails;
+	}
 
 }

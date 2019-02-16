@@ -159,7 +159,7 @@ public class UserController {
 // https://www.baeldung.com/jackson-custom-serialization
 		List<UserDto> users = userService.getUsers(page, limit);
 		
-		String serialized = new ObjectMapper().writeValueAsString(users);;
+		String serialized = new ObjectMapper().writeValueAsString(users);
 		
 		return serialized;
 	}

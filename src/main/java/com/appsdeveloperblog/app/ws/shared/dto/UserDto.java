@@ -20,6 +20,8 @@ public class UserDto implements Serializable {
 	private String encryptedPassword;
 	private String emailVerificationToken;
 	private Boolean emailVerificationStatus = false;
+	
+	//@JsonSerialize(using = AddressEntitySerializer.class)
 	private List<AddressDTO> addresses;
 
 	public long getId() {

@@ -2,25 +2,24 @@ package com.appsdeveloperblog.app.ws.serializers;
 
 import java.io.IOException;
 
-import com.appsdeveloperblog.app.ws.shared.dto.AddressDTO;
+import com.appsdeveloperblog.app.ws.io.entity.AddressEntity;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
+public class AddressEntitySerializer extends StdSerializer<AddressEntity> {
 
-public class AddressSerializer extends StdSerializer<AddressDTO> {
 
-
-	public AddressSerializer(Class<AddressDTO> t) {
+	public AddressEntitySerializer(Class<AddressEntity> t) {
 		super(t);
 	}
 	
-	public AddressSerializer() {
+	public AddressEntitySerializer() {
 		this(null);
 	}
 
 	@Override
-	public void serialize(AddressDTO value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
+	public void serialize(AddressEntity value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
 		jgen.writeStartObject();
         jgen.writeNumberField("id", value.getId());
         jgen.writeStringField("city", value.getCity());
