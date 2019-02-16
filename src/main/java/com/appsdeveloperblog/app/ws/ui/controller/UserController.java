@@ -1,14 +1,19 @@
 package com.appsdeveloperblog.app.ws.ui.controller;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.appsdeveloperblog.app.ws.exceptions.UserServiceException;
+import com.appsdeveloperblog.app.ws.serializers.UserSerializer;
 import com.appsdeveloperblog.app.ws.service.AddressService;
 import com.appsdeveloperblog.app.ws.service.UserService;
 import com.appsdeveloperblog.app.ws.shared.dto.AddressDTO;
@@ -33,12 +39,9 @@ import com.appsdeveloperblog.app.ws.ui.model.response.ErrorMessages;
 import com.appsdeveloperblog.app.ws.ui.model.response.OperationStatusModel;
 import com.appsdeveloperblog.app.ws.ui.model.response.RequestOperationStatus;
 import com.appsdeveloperblog.app.ws.ui.model.response.UserRest;
-
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.Resources;
-import org.springframework.hateoas.Link;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 
 
 @RestController
@@ -129,6 +132,25 @@ public class UserController {
 		}
 
 		return returnValue;
+	}
+	
+	
+	@GetMapping(path = "/customSerialized", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public String getUsersCustom(@RequestParam(value = "page", defaultValue = "0") int page,
+								   @RequestParam(value = "limit", defaultValue = "2") int limit) throws JsonProcessingException {
+// https://www.baeldung.com/jackson-custom-serialization
+		List<UserDto> users = userService.getUsers(page, limit);
+		
+		//Item myItem = new Item(1, "theItem", new User(2, "theUser"));
+		ObjectMapper mapper = new ObjectMapper();
+		 
+		SimpleModule module = new SimpleModule();
+		module.addSerializer(UserDto.class, new UserSerializer());
+		mapper.registerModule(module);
+		 
+		String serialized = mapper.writeValueAsString(users);
+		
+		return serialized;
 	}
 	
 	// http://localhost:8080/mobile-app-ws/users/jfhdjeufhdhdj/addressses
