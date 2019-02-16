@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity(name="addresses")
@@ -38,6 +39,8 @@ public class AddressEntity implements Serializable {
 	@Column(length=10, nullable=false)
 	private String type;
 	
+	
+	@JsonIgnore
 	@JsonManagedReference
 	@ManyToOne
 	@JoinColumn(name="users_id")
@@ -99,12 +102,12 @@ public class AddressEntity implements Serializable {
 		this.type = type;
 	}
 
-	public UserEntity getUserDetails() {
-		return userDetails;
-	}
-
-	public void setUserDetails(UserEntity userDetails) {
-		this.userDetails = userDetails;
-	}
+//	public UserEntity getUserDetails() {
+//		return userDetails;
+//	}
+//
+//	public void setUserDetails(UserEntity userDetails) {
+//		this.userDetails = userDetails;
+//	}
 
 }

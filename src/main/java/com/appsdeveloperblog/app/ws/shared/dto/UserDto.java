@@ -3,6 +3,11 @@ package com.appsdeveloperblog.app.ws.shared.dto;
 import java.io.Serializable;
 import java.util.List;
 
+import com.appsdeveloperblog.app.ws.serializers.UserSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+
+@JsonSerialize(using = UserSerializer.class)
 public class UserDto implements Serializable {
 	
 	private static final long serialVersionUID = 6835192601898364280L;

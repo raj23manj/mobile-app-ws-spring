@@ -153,6 +153,17 @@ public class UserController {
 		return serialized;
 	}
 	
+	@GetMapping(path = "/customSerializedOverview", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public String getUsersCustomOverview(@RequestParam(value = "page", defaultValue = "0") int page,
+								   @RequestParam(value = "limit", defaultValue = "2") int limit) throws JsonProcessingException {
+// https://www.baeldung.com/jackson-custom-serialization
+		List<UserDto> users = userService.getUsers(page, limit);
+		
+		String serialized = new ObjectMapper().writeValueAsString(users);;
+		
+		return serialized;
+	}
+	
 	// http://localhost:8080/mobile-app-ws/users/jfhdjeufhdhdj/addressses
 	@GetMapping(path = "/{id}/addresses", produces = { MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_JSON_VALUE, "application/hal+json" })
