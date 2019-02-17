@@ -37,6 +37,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
         .permitAll()
         .antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_URL)
         .permitAll()
+        .antMatchers("/users")
+        .permitAll()
         .antMatchers(SecurityConstants.H2_CONSOLE)// making h2console also public
         .permitAll()
         .anyRequest()

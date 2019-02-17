@@ -3,6 +3,9 @@ package com.appsdeveloperblog.app.ws.shared.dto;
 import java.io.Serializable;
 import java.util.List;
 
+import com.appsdeveloperblog.app.ws.serializers.AddressDtoSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 public class UserDto implements Serializable {
 	
 	private static final long serialVersionUID = 6835192601898364280L;
@@ -15,6 +18,8 @@ public class UserDto implements Serializable {
 	private String encryptedPassword;
 	private String emailVerificationToken;
 	private Boolean emailVerificationStatus = false;
+	
+//	@JsonSerialize(using = AddressDtoSerializer.class)
 	private List<AddressDTO> addresses;
 
 	public long getId() {

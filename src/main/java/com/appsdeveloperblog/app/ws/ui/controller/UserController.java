@@ -1,14 +1,19 @@
 package com.appsdeveloperblog.app.ws.ui.controller;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.appsdeveloperblog.app.ws.exceptions.UserServiceException;
+import com.appsdeveloperblog.app.ws.serializers.UserDtoSerializer;
 import com.appsdeveloperblog.app.ws.service.AddressService;
 import com.appsdeveloperblog.app.ws.service.UserService;
 import com.appsdeveloperblog.app.ws.shared.dto.AddressDTO;
@@ -33,12 +39,9 @@ import com.appsdeveloperblog.app.ws.ui.model.response.ErrorMessages;
 import com.appsdeveloperblog.app.ws.ui.model.response.OperationStatusModel;
 import com.appsdeveloperblog.app.ws.ui.model.response.RequestOperationStatus;
 import com.appsdeveloperblog.app.ws.ui.model.response.UserRest;
-
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.Resources;
-import org.springframework.hateoas.Link;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 
 
 @RestController
@@ -112,23 +115,32 @@ public class UserController {
 		return returnValue;
 	}
 	
+	//@JsonSerialize(using = UserDtoSerializer.class)
 	@GetMapping(produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-	public List<UserRest> getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
-								   @RequestParam(value = "limit", defaultValue = "2") int limit) {
-		List<UserRest> returnValue = new ArrayList<>();
+	public String getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
+								   @RequestParam(value = "limit", defaultValue = "2") int limit) throws JsonProcessingException {
+		//List<UserRest> returnValue = new ArrayList<>();
 
 		List<UserDto> users = userService.getUsers(page, limit);
 		
 		//Type listType = new TypeToken<List<UserRest>>() {}.getType();
 		//returnValue = new ModelMapper().map(users, listType);
 
-		for (UserDto userDto : users) {
-			UserRest userModel = new UserRest();
-			BeanUtils.copyProperties(userDto, userModel);
-			returnValue.add(userModel);
-		}
+//		for (UserDto userDto : users) {
+//			UserRest userModel = new UserRest();
+//			BeanUtils.copyProperties(userDto, userModel);
+//			returnValue.add(userModel);
+//		}
+		
+		ObjectMapper mapper = new ObjectMapper();
+		 
+		SimpleModule module = new SimpleModule();
+		module.addSerializer(UserDto.class, new UserDtoSerializer());
+		mapper.registerModule(module);
+		 
+		String serialized = mapper.writeValueAsString(users);
 
-		return returnValue;
+		return serialized;
 	}
 	
 	// http://localhost:8080/mobile-app-ws/users/jfhdjeufhdhdj/addressses

@@ -9,6 +9,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+@JsonIdentityInfo(
+		  generator = ObjectIdGenerators.PropertyGenerator.class, 
+		  property = "id")
 @Entity(name="addresses")
 public class AddressEntity implements Serializable {
 
@@ -36,6 +43,7 @@ public class AddressEntity implements Serializable {
 	@Column(length=10, nullable=false)
 	private String type;
 	
+	//@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name="users_id")
 	private UserEntity userDetails;
