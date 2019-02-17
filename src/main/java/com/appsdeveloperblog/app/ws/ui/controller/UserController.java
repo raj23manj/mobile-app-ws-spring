@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.appsdeveloperblog.app.ws.exceptions.UserServiceException;
+import com.appsdeveloperblog.app.ws.serializers.AddressDtoSerializer;
 import com.appsdeveloperblog.app.ws.serializers.UserDtoSerializer;
 import com.appsdeveloperblog.app.ws.service.AddressService;
 import com.appsdeveloperblog.app.ws.service.UserService;
@@ -41,6 +42,7 @@ import com.appsdeveloperblog.app.ws.ui.model.response.RequestOperationStatus;
 import com.appsdeveloperblog.app.ws.ui.model.response.UserRest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
 
@@ -168,6 +170,28 @@ public class UserController {
 
 		return new Resources<>(addressesListRestModel);
 	}
+	
+	
+	// https://grokonez.com/json/use-jsonview-serializede-serialize-customize-json-format-java-object
+	//@JsonSerialize(using = AddressDtoSerializer.class)
+	@GetMapping(path = "/objectsListMapperAddress", 
+			    produces = { MediaType.APPLICATION_JSON_VALUE }) // MediaType.APPLICATION_XML_VALUE,
+	public String getAddressAsListMapper(@RequestParam(value = "page", defaultValue = "0") int page,
+								   @RequestParam(value = "limit", defaultValue = "2") int limit) throws JsonProcessingException {
+		
+		List<AddressDTO> addresses = addressesService.getAllAddresses();
+		
+		ObjectMapper mapper = new ObjectMapper();
+		 
+		SimpleModule module = new SimpleModule();
+		module.addSerializer(AddressDTO.class, new AddressDtoSerializer());
+		mapper.registerModule(module);
+		 
+		String serialized = mapper.writeValueAsString(addresses);
+
+		return serialized;
+		
+}
 
 	@GetMapping(path = "/{userId}/addresses/{addressId}", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE, "application/hal+json" })
